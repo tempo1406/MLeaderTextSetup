@@ -6,9 +6,9 @@ using MLeaderTextSetup.Models;
 
 namespace MLeaderTextSetup.Actions
 {
-    public static class MLeaderActions
+    public static class MLeaderAction
     {
-        public static void CreateNewMLeader(MLeaderTextSettings settings)
+        public static void CreateNewMLeader(MLeaderTextSettingModel settings)
         {
             var doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null) return;
@@ -46,8 +46,8 @@ namespace MLeaderTextSetup.Actions
 
                     var mt = new MText();
                     mt.SetDatabaseDefaults();
-                    var demoPreview = new PreviewData();
-                    mt.Contents = PreviewActions.BuildText(settings, demoPreview);
+                    var demoPreview = new PreviewDataModel();
+                    mt.Contents = PreviewAction.BuildText(settings, demoPreview);
                     mt.TextStyleId = textStyleId;
                     mt.TextHeight = settings.TextHeight;
                     mt.Location = ppr2.Value;

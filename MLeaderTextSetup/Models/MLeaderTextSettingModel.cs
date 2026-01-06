@@ -1,6 +1,6 @@
 ﻿namespace MLeaderTextSetup.Models
 {
-    public class MLeaderTextSettings
+    public class MLeaderTextSettingModel
     {
         public string TextStyleName { get; set; } = "Standard";
         public double TextHeight { get; set; } = 2.5;

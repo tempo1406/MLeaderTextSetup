@@ -5,7 +5,7 @@ using Autodesk.AutoCAD.Runtime;
 
 namespace MLeaderTextSetup.Actions
 {
-    public class TextStyleActions
+    public class TextStyleAction
     {
         public static List<string> GetTextStyleNames()
         {

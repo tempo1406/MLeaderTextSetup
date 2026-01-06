@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 using Autodesk.AutoCAD.ApplicationServices;
+using Libraries.MVVMCore;
 using MLeaderTextSetup.Actions;
 using MLeaderTextSetup.Models;
 
 namespace MLeaderTextSetup.ViewModels
 {
-    public class TextSetupViewModel : BaseViewModel
+    public class TextSetupViewModel : ViewModelBase
     {
         private readonly Action _close;
-        private readonly PreviewData _previewData = new PreviewData();
+        private readonly PreviewDataModel _previewData = new PreviewDataModel();
 
         public List<string> TextStyles { get; }
-        public List<ColorItem> ColorItems { get; }
+        public List<ColorItemModel> ColorItems { get; }
 
-        private MLeaderTextSettings _settings;
-        public MLeaderTextSettings Settings
+        private MLeaderTextSettingModel _settings;
+        public MLeaderTextSettingModel Settings
         {
             get => _settings;
             private set { _settings = value; OnPropertyChanged(); }
@@ -41,8 +42,8 @@ namespace MLeaderTextSetup.ViewModels
             }
         }
 
-        private ColorItem _selectedColorItem;
-        public ColorItem SelectedColorItem
+        private ColorItemModel _selectedColorItem;
+        public ColorItemModel SelectedColorItem
         {
             get => _selectedColorItem;
             set
@@ -79,17 +80,17 @@ namespace MLeaderTextSetup.ViewModels
         {
             _close = close;
 
-            TextStyles = TextStyleActions.GetTextStyleNames().OrderBy(x => x).ToList();
+            TextStyles = TextStyleAction.GetTextStyleNames().OrderBy(x => x).ToList();
             ColorItems = GetColorItems();
 
-            Settings = SettingsActions.LoadFromDrawing() ?? new MLeaderTextSettings();
+            Settings = SettingsAction.LoadFromDrawing() ?? new MLeaderTextSettingModel();
 
             _selectedColorItem = ColorItems.FirstOrDefault(c => c.AciIndex == Settings.ColorIndex) 
                                  ?? ColorItems.FirstOrDefault(c => c.AciIndex == 256);
 
-            DefaultCommand = new RelayCommand(() =>
+            DefaultCommand = new RelayCommand(p =>
             {
-                Settings = new MLeaderTextSettings();
+                Settings = new MLeaderTextSettingModel();
                 OnPropertyChanged(nameof(TextStyleName));
                 OnPropertyChanged(nameof(TextHeight));
                 OnPropertyChanged(nameof(FormatTemplate));
@@ -99,11 +100,11 @@ namespace MLeaderTextSetup.ViewModels
                 UpdatePreview();
             });
 
-            DrawCommand = new RelayCommand(() =>
+            DrawCommand = new RelayCommand(p =>
             {
                 try
                 {
-                    SettingsActions.SaveToDrawing(Settings);
+                    SettingsAction.SaveToDrawing(Settings);
                     _close();
 
                     var doc = Application.DocumentManager.MdiActiveDocument;
@@ -117,30 +118,30 @@ namespace MLeaderTextSetup.ViewModels
                 }
             });
 
-            CloseCommand = new RelayCommand(() => _close());
+            CloseCommand = new RelayCommand(p => _close());
 
             UpdatePreview();
         }
 
         private void UpdatePreview()
         {
-            PreviewText = PreviewActions.BuildText(Settings, _previewData);
+            PreviewText = PreviewAction.BuildText(Settings, _previewData);
         }
 
-        private List<ColorItem> GetColorItems()
+        private List<ColorItemModel> GetColorItems()
         {
-            return new List<ColorItem>
+            return new List<ColorItemModel>
             {
-                new ColorItem { Name = "ByLayer", AciIndex = 256, ColorBrush = Brushes.White },
-                new ColorItem { Name = "Red", AciIndex = 1, ColorBrush = Brushes.Red },
-                new ColorItem { Name = "Yellow", AciIndex = 2, ColorBrush = Brushes.Yellow },
-                new ColorItem { Name = "Green", AciIndex = 3, ColorBrush = Brushes.Lime },
-                new ColorItem { Name = "Cyan", AciIndex = 4, ColorBrush = Brushes.Cyan },
-                new ColorItem { Name = "Blue", AciIndex = 5, ColorBrush = Brushes.Blue },
-                new ColorItem { Name = "Magenta", AciIndex = 6, ColorBrush = Brushes.Magenta },
-                new ColorItem { Name = "White", AciIndex = 7, ColorBrush = Brushes.White },
-                new ColorItem { Name = "Gray", AciIndex = 8, ColorBrush = Brushes.Gray },
-                new ColorItem { Name = "Light Gray", AciIndex = 9, ColorBrush = Brushes.LightGray }
+                new ColorItemModel { Name = "ByLayer", AciIndex = 256, ColorBrush = Brushes.White },
+                new ColorItemModel { Name = "Red", AciIndex = 1, ColorBrush = Brushes.Red },
+                new ColorItemModel { Name = "Yellow", AciIndex = 2, ColorBrush = Brushes.Yellow },
+                new ColorItemModel { Name = "Green", AciIndex = 3, ColorBrush = Brushes.Lime },
+                new ColorItemModel { Name = "Cyan", AciIndex = 4, ColorBrush = Brushes.Cyan },
+                new ColorItemModel { Name = "Blue", AciIndex = 5, ColorBrush = Brushes.Blue },
+                new ColorItemModel { Name = "Magenta", AciIndex = 6, ColorBrush = Brushes.Magenta },
+                new ColorItemModel { Name = "White", AciIndex = 7, ColorBrush = Brushes.White },
+                new ColorItemModel { Name = "Gray", AciIndex = 8, ColorBrush = Brushes.Gray },
+                new ColorItemModel { Name = "Light Gray", AciIndex = 9, ColorBrush = Brushes.LightGray }
             };
         }
     }

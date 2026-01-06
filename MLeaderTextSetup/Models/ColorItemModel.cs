@@ -2,7 +2,7 @@ using System.Windows.Media;
 
 namespace MLeaderTextSetup.Models
 {
-    public class ColorItem
+    public class ColorItemModel
     {
         public string Name { get; set; }
         public short AciIndex { get; set; }

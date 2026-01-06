@@ -1,6 +1,6 @@
 ﻿namespace MLeaderTextSetup.Models
 {
-    public class PreviewData
+    public class PreviewDataModel
     {
         public string A { get; set; } = "1";
         public string B { get; set; } = "11";

@@ -81,23 +81,24 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions\MLeaderActions.cs" />
-    <Compile Include="Actions\PreviewActions.cs" />
-    <Compile Include="Actions\SettingsActions.cs" />
-    <Compile Include="Actions\TextStyleActions.cs" />
-    <Compile Include="Commands\MLeaderApplyCommands.cs" />
-    <Compile Include="Commands\MLeaderCommands.cs" />
-    <Compile Include="Commands\MLeaderDrawCommands.cs" />
-    <Compile Include="Models\ColorItem.cs" />
-    <Compile Include="Models\MLeaderTextSettings.cs" />
-    <Compile Include="Models\PreviewData.cs" />
-    <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\RelayCommand.cs" />
+    <Compile Include="Actions\MLeaderAction.cs" />
+    <Compile Include="Actions\PreviewAction.cs" />
+    <Compile Include="Actions\SettingsAction.cs" />
+    <Compile Include="Actions\TextStyleAction.cs" />
+    <Compile Include="Commands\AppCommands.cs" />
+    <Compile Include="Models\ColorItemModel.cs" />
+    <Compile Include="Models\MLeaderTextSettingModel.cs" />
+    <Compile Include="Models\PreviewDataModel.cs" />
+    <Compile Include="MVVM\ActiveData.cs" />
+    <Compile Include="MVVM\Annotation\RequiredAttribute.cs" />
+    <Compile Include="MVVM\ModelValidator.cs" />
+    <Compile Include="MVVM\RelayCommand.cs" />
+    <Compile Include="MVVM\ViewModelBase.cs" />
     <Compile Include="ViewModels\TextSetupViewModel.cs" />
-    <Compile Include="Views\TextSetupWindow.xaml.cs">
-      <DependentUpon>TextSetupWindow.xaml</DependentUpon>
+    <Compile Include="Views\TextSetupView.xaml.cs">
+      <DependentUpon>TextSetupView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\TextSetupWindow.xaml">
+    <Page Include="Views\TextSetupView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

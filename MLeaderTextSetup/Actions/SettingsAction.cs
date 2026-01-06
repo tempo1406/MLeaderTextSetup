@@ -9,12 +9,12 @@ using System.Text;
 
 namespace MLeaderTextSetup.Actions
 {
-    public static class SettingsActions
+    public static class SettingsAction
     {
         private const string DictName = "MLEADER_TEXT_SETUP_DICT";
         private const string RecordKey = "SETTINGS_JSON";
 
-        public static MLeaderTextSettings LoadFromDrawing()
+        public static MLeaderTextSettingModel LoadFromDrawing()
         {
             var doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null) return null;
@@ -53,7 +53,7 @@ namespace MLeaderTextSetup.Actions
                     tr.Commit();
 
                     if (string.IsNullOrWhiteSpace(json)) return null;
-                    return JsonConvert.DeserializeObject<MLeaderTextSettings>(json);
+                    return JsonConvert.DeserializeObject<MLeaderTextSettingModel>(json);
                 }
             }
             finally
@@ -63,7 +63,7 @@ namespace MLeaderTextSetup.Actions
             }
         }
 
-        public static void SaveToDrawing(MLeaderTextSettings settings)
+        public static void SaveToDrawing(MLeaderTextSettingModel settings)
         {
             var doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null) return;

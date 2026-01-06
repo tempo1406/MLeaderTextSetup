@@ -2,9 +2,9 @@
 
 namespace MLeaderTextSetup.Actions
 {
-    public class PreviewActions
+    public class PreviewAction
     {
-        public static string BuildText(MLeaderTextSettings s, PreviewData d)
+        public static string BuildText(MLeaderTextSettingModel s, PreviewDataModel d)
         {
             string text = s.FormatTemplate
                 .Replace("{A}", d.A)
