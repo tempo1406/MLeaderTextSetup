@@ -38,6 +38,12 @@ namespace MLeaderTextSetup.Actions
                     if (!string.IsNullOrWhiteSpace(settings.TextStyleName) && tst.Has(settings.TextStyleName))
                         textStyleId = tst[settings.TextStyleName];
 
+                    Color finalColor;
+                    if (settings.ColorByLayer)
+                        finalColor = Color.FromColorIndex(ColorMethod.ByLayer, 256);
+                    else
+                        finalColor = Color.FromColorIndex(ColorMethod.ByAci, settings.ColorIndex);
+
                     var mt = new MText();
                     mt.SetDatabaseDefaults();
                     var demoPreview = new PreviewData();
@@ -45,6 +51,7 @@ namespace MLeaderTextSetup.Actions
                     mt.TextStyleId = textStyleId;
                     mt.TextHeight = settings.TextHeight;
                     mt.Location = ppr2.Value;
+                    mt.Color = finalColor;
 
                     var mleader = new MLeader();
                     mleader.SetDatabaseDefaults();
@@ -58,10 +65,7 @@ namespace MLeaderTextSetup.Actions
                     mleader.AddFirstVertex(lineIndex, ppr1.Value);
                     mleader.AddLastVertex(lineIndex, ppr2.Value);
 
-                    if (settings.ColorByLayer)
-                        mleader.Color = Color.FromColorIndex(ColorMethod.ByLayer, 256);
-                    else
-                        mleader.Color = Color.FromColorIndex(ColorMethod.ByAci, settings.ColorIndex);
+                    mleader.Color = finalColor;
 
                     btr.AppendEntity(mleader);
                     tr.AddNewlyCreatedDBObject(mleader, true);

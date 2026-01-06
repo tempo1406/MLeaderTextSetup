@@ -73,6 +73,8 @@ namespace MLeaderTextSetup.ViewModels
 
         public RelayCommand DefaultCommand { get; }
         public RelayCommand DrawCommand { get; }
+        public RelayCommand DrawMultiPointCommand { get; }
+        public RelayCommand DrawMultiCommand { get; }
         public RelayCommand CloseCommand { get; }
 
         public TextSetupViewModel(Action close)
@@ -84,7 +86,8 @@ namespace MLeaderTextSetup.ViewModels
 
             Settings = SettingsActions.LoadFromDrawing() ?? new MLeaderTextSettings();
 
-\            _selectedColorItem = ColorItems.FirstOrDefault(c => c.AciIndex == Settings.ColorIndex) 
+            // Set initial selected color item based on settings
+            _selectedColorItem = ColorItems.FirstOrDefault(c => c.AciIndex == Settings.ColorIndex) 
                                  ?? ColorItems.FirstOrDefault(c => c.AciIndex == 256);
 
             DefaultCommand = new RelayCommand(() =>
@@ -103,6 +106,9 @@ namespace MLeaderTextSetup.ViewModels
             {
                 try
                 {
+                    // Update Bridge
+                    UpdateBridgeData();
+                    
                     SettingsActions.SaveToDrawing(Settings);
                     _close();
 
@@ -117,9 +123,58 @@ namespace MLeaderTextSetup.ViewModels
                 }
             });
 
+            DrawMultiPointCommand = new RelayCommand(() =>
+            {
+                try
+                {
+                    UpdateBridgeData();
+
+                    SettingsActions.SaveToDrawing(Settings);
+                    _close();
+
+                    var doc = Application.DocumentManager.MdiActiveDocument;
+                    doc.SendStringToExecute("MLEADER_MULTI_POINT ", true, false, false);
+                }
+                catch (Exception ex)
+                {
+                    var doc = Application.DocumentManager.MdiActiveDocument;
+                    if (doc != null)
+                        doc.Editor.WriteMessage($"\nLỗi: {ex.Message}");
+                }
+            });
+
+            DrawMultiCommand = new RelayCommand(() =>
+            {
+                try
+                {
+                    UpdateBridgeData();
+
+                    SettingsActions.SaveToDrawing(Settings);
+                    _close();
+
+                    var doc = Application.DocumentManager.MdiActiveDocument;
+                    doc.SendStringToExecute("MLEADER_MULTI_DRAW ", true, false, false);
+                }
+                catch (Exception ex)
+                {
+                    var doc = Application.DocumentManager.MdiActiveDocument;
+                    if (doc != null)
+                        doc.Editor.WriteMessage($"\nLỗi: {ex.Message}");
+                }
+            });
+
             CloseCommand = new RelayCommand(() => _close());
 
             UpdatePreview();
+        }
+
+        private void UpdateBridgeData()
+        {
+            DrawDataBridge.TextStyleName = Settings.TextStyleName;
+            DrawDataBridge.TextHeight = Settings.TextHeight;
+            DrawDataBridge.ColorIndex = Settings.ColorIndex;
+            DrawDataBridge.ColorByLayer = Settings.ColorByLayer;
+            DrawDataBridge.FormatTemplate = Settings.FormatTemplate;
         }
 
         private void UpdatePreview()
