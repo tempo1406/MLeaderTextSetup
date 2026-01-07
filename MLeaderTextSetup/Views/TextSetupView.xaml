@@ -93,6 +93,9 @@
             <Button Grid.Column="2" Content="Vẽ" Width="100" Height="38" Margin="0,0,8,0"
                     Background="#0078D7" Foreground="White" BorderThickness="0" FontWeight="SemiBold"
                     Command="{Binding DrawCommand}"/>
+            <Button Grid.Column="3" Content="Vẽ Vertex" Width="110" Height="38" Margin="0,0,8,0"
+                    Background="#17A2B8" Foreground="White" BorderThickness="0" FontWeight="SemiBold"
+                    Command="{Binding DrawVertexCommand}"/>
             <Button Grid.Column="5" Content="Đóng" Width="100" Height="38"
                     Background="#DC3545" Foreground="White" BorderThickness="0" FontWeight="SemiBold"
                     Command="{Binding CloseCommand}"/>

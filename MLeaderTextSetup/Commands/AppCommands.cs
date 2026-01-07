@@ -25,5 +25,12 @@ namespace MLeaderTextSetup.Commands
             MLeaderAction.CreateNewMLeader(settings);
         }
         #endregion
+
+        [CommandMethod("MLEADER_DRAW_VERTEX")]
+        public void DrawLeaderMultiVertex()
+        {
+            var settings = SettingsAction.LoadFromDrawing() ?? new MLeaderTextSettingModel();
+            MLeaderAction.CreateSingleLeaderMultiVertex(settings);
+        }
     }
 }

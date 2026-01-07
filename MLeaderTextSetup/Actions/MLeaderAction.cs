@@ -2,12 +2,16 @@
 using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.Geometry;
 using MLeaderTextSetup.Models;
+using System;
+using System.Collections.Generic;
 
 namespace MLeaderTextSetup.Actions
 {
     public static class MLeaderAction
     {
+        #region Vẽ Mleader
         public static void CreateNewMLeader(MLeaderTextSettingModel settings)
         {
             var doc = Application.DocumentManager.MdiActiveDocument;
@@ -80,5 +84,120 @@ namespace MLeaderTextSetup.Actions
                 ed.WriteMessage($"\nLỗi: {ex.Message}");
             }
         }
+        #endregion
+
+        #region Vẽ multiple vertex leader
+        public static void CreateSingleLeaderMultiVertex(MLeaderTextSettingModel settings)
+        {
+            var doc = Application.DocumentManager.MdiActiveDocument;
+            if (doc == null) return;
+
+            var ed = doc.Editor;
+            var db = doc.Database;
+
+            try
+            {
+                var vertices = new List<Point3d>();
+
+                ed.WriteMessage("\nChọn các điểm của leader (điểm đầu là mũi tên). Enter để kết thúc:");
+                while (true)
+                {
+                    var opt = new PromptPointOptions("\nChọn điểm leader: ")
+                    {
+                        AllowNone = true
+                    };
+
+                    if (vertices.Count > 0)
+                    {
+                        opt.UseBasePoint = true;
+                        opt.BasePoint = vertices[vertices.Count - 1];
+                    }
+
+                    var res = ed.GetPoint(opt);
+
+                    if (res.Status == PromptStatus.OK)
+                    {
+                        vertices.Add(res.Value);
+                    }
+                    else if (res.Status == PromptStatus.None || res.Status == PromptStatus.Cancel)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                if (vertices.Count < 2)
+                {
+                    ed.WriteMessage("\nCần ít nhất 2 điểm (mũi tên + ít nhất 1 điểm bẻ).");
+                    return;
+                }
+
+                var landingRes = ed.GetPoint("\nChọn điểm đặt Text: ");
+                if (landingRes.Status != PromptStatus.OK) return;
+
+                var landingPoint = landingRes.Value;
+
+                using (var tr = db.TransactionManager.StartTransaction())
+                {
+                    var btr = (BlockTableRecord)tr.GetObject(db.CurrentSpaceId, OpenMode.ForWrite);
+
+                    ObjectId textStyleId = db.Textstyle;
+                    var tst = (TextStyleTable)tr.GetObject(db.TextStyleTableId, OpenMode.ForRead);
+                    if (!string.IsNullOrWhiteSpace(settings.TextStyleName) && tst.Has(settings.TextStyleName))
+                        textStyleId = tst[settings.TextStyleName];
+
+                    var finalColor = settings.ColorByLayer
+                        ? Color.FromColorIndex(ColorMethod.ByLayer, 256)
+                        : Color.FromColorIndex(ColorMethod.ByAci, settings.ColorIndex);
+
+                    var previewData = new PreviewDataModel();
+                    string contents = PreviewAction.BuildText(settings, previewData);
+
+                    var mt = new MText();
+                    mt.SetDatabaseDefaults();
+                    mt.Contents = contents;
+                    mt.TextStyleId = textStyleId;
+                    mt.TextHeight = settings.TextHeight;
+                    mt.Location = landingPoint;
+                    mt.Color = finalColor;
+
+                    var ml = new MLeader();
+                    ml.SetDatabaseDefaults();
+                    ml.ContentType = ContentType.MTextContent;
+                    ml.MText = mt;
+
+                    ml.TextLocation = landingPoint;
+                    ml.LeaderLineType = LeaderType.StraightLeader;
+                    ml.Color = finalColor;
+
+                    int leaderIndex = ml.AddLeader();
+                    int lineIndex = ml.AddLeaderLine(leaderIndex);
+
+                    ml.AddFirstVertex(lineIndex, vertices[0]);
+
+                    for (int i = 1; i < vertices.Count; i++)
+                    {
+                        ml.AddLastVertex(lineIndex, vertices[i]);
+                    }
+
+                    ml.AddLastVertex(lineIndex, landingPoint);
+
+                    btr.AppendEntity(ml);
+                    tr.AddNewlyCreatedDBObject(ml, true);
+
+                    tr.Commit();
+                }
+
+                ed.WriteMessage("\nĐã vẽ MLeader (1 leader, nhiều điểm gấp khúc) thành công!");
+            }
+            catch (Exception ex)
+            {
+                ed.WriteMessage($"\nLỗi: {ex.Message}");
+            }
+        }
+        #endregion
     }
 }

@@ -74,6 +74,7 @@ namespace MLeaderTextSetup.ViewModels
 
         public RelayCommand DefaultCommand { get; }
         public RelayCommand DrawCommand { get; }
+        public RelayCommand DrawVertexCommand { get; }
         public RelayCommand CloseCommand { get; }
 
         public TextSetupViewModel(Action close)
@@ -117,6 +118,25 @@ namespace MLeaderTextSetup.ViewModels
                         doc.Editor.WriteMessage($"\nLỗi: {ex.Message}");
                 }
             });
+
+            DrawVertexCommand = new RelayCommand(p =>
+            {
+                try
+                {
+                    SettingsAction.SaveToDrawing(Settings);
+                    _close();
+
+                    var doc = Application.DocumentManager.MdiActiveDocument;
+                    doc.SendStringToExecute("MLEADER_DRAW_VERTEX ", true, false, false);
+                }
+                catch (Exception ex)
+                {
+                    var doc = Application.DocumentManager.MdiActiveDocument;
+                    if (doc != null)
+                        doc.Editor.WriteMessage($"\nLỗi: {ex.Message}");
+                }
+            });
+
 
             CloseCommand = new RelayCommand(p => _close());
 
