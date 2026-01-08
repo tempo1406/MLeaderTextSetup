@@ -6,6 +6,5 @@ namespace MLeaderTextSetup.Models
     {
         public string Name { get; set; }
         public short AciIndex { get; set; }
-        public Brush ColorBrush { get; set; }
     }
 }

@@ -4,9 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MLeaderTextSetup.Views"
+        xmlns:converters="clr-namespace:MLeaderTextSetup.Converters"
         mc:Ignorable="d"
         Title="Cấu hình hiển thị Text (Setup)" Height="450" Width="800"
         Background="#F5F5F5">
+    <Window.Resources>
+        <converters:AciColorToBrushConverter x:Key="AciColorToBrushConverter"/>
+        <converters:AciColorToNameConverter x:Key="AciColorToNameConverter"/>
+    </Window.Resources>
     <Grid Margin="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -49,7 +54,9 @@
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Border Width="16" Height="16" Background="{Binding ColorBrush}" BorderBrush="Gray" BorderThickness="1" Margin="0,0,8,0"/>
+                                <Border Width="16" Height="16" 
+                                        Background="{Binding AciIndex, Converter={StaticResource AciColorToBrushConverter}}" 
+                                        BorderBrush="Gray" BorderThickness="1" Margin="0,0,8,0"/>
                                 <TextBlock Text="{Binding Name}"/>
                             </StackPanel>
                         </DataTemplate>
@@ -66,7 +73,7 @@
             </GroupBox.Header>
             <Border Background="#1E1E1E" CornerRadius="6" Padding="14" Height="100">
                 <TextBlock Text="{Binding PreviewText}"
-                           Foreground="{Binding SelectedColorItem.ColorBrush}"
+                           Foreground="{Binding SelectedColorItem.AciIndex, Converter={StaticResource AciColorToBrushConverter}}"
                            FontSize="20"
                            FontWeight="Normal"
                            VerticalAlignment="Center"
@@ -84,19 +91,19 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="1" Content="Mặc định" Width="100" Height="38" Margin="0,0,8,0"
+            <Button Grid.Column="0" Content="Mặc định" Width="100" Height="38" Margin="0,0,8,0"
+                    HorizontalAlignment="Right"
                     Background="White" BorderBrush="#CCCCCC" BorderThickness="1"
                     Command="{Binding DefaultCommand}" FontWeight="SemiBold"/>
-            <Button Grid.Column="2" Content="Vẽ" Width="100" Height="38" Margin="0,0,8,0"
+            <Button Grid.Column="1" Content="Vẽ" Width="100" Height="38" Margin="0,0,8,0"
                     Background="#0078D7" Foreground="White" BorderThickness="0" FontWeight="SemiBold"
                     Command="{Binding DrawCommand}"/>
-            <Button Grid.Column="3" Content="Vẽ Vertex" Width="110" Height="38" Margin="0,0,8,0"
+            <Button Grid.Column="2" Content="Vẽ Vertex" Width="110" Height="38" Margin="0,0,8,0"
                     Background="#17A2B8" Foreground="White" BorderThickness="0" FontWeight="SemiBold"
                     Command="{Binding DrawVertexCommand}"/>
-            <Button Grid.Column="5" Content="Đóng" Width="100" Height="38"
+            <Button Grid.Column="3" Content="Đóng" Width="100" Height="38"
                     Background="#DC3545" Foreground="White" BorderThickness="0" FontWeight="SemiBold"
                     Command="{Binding CloseCommand}"/>
         </Grid>

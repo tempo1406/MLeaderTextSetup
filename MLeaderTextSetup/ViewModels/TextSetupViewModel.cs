@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
 using Autodesk.AutoCAD.ApplicationServices;
 using Libraries.MVVMCore;
 using MLeaderTextSetup.Actions;
@@ -152,16 +151,16 @@ namespace MLeaderTextSetup.ViewModels
         {
             return new List<ColorItemModel>
             {
-                new ColorItemModel { Name = "ByLayer", AciIndex = 256, ColorBrush = Brushes.White },
-                new ColorItemModel { Name = "Red", AciIndex = 1, ColorBrush = Brushes.Red },
-                new ColorItemModel { Name = "Yellow", AciIndex = 2, ColorBrush = Brushes.Yellow },
-                new ColorItemModel { Name = "Green", AciIndex = 3, ColorBrush = Brushes.Lime },
-                new ColorItemModel { Name = "Cyan", AciIndex = 4, ColorBrush = Brushes.Cyan },
-                new ColorItemModel { Name = "Blue", AciIndex = 5, ColorBrush = Brushes.Blue },
-                new ColorItemModel { Name = "Magenta", AciIndex = 6, ColorBrush = Brushes.Magenta },
-                new ColorItemModel { Name = "White", AciIndex = 7, ColorBrush = Brushes.White },
-                new ColorItemModel { Name = "Gray", AciIndex = 8, ColorBrush = Brushes.Gray },
-                new ColorItemModel { Name = "Light Gray", AciIndex = 9, ColorBrush = Brushes.LightGray }
+                new ColorItemModel { Name = "ByLayer", AciIndex = 256 },
+                new ColorItemModel { Name = "Red", AciIndex = 1 },
+                new ColorItemModel { Name = "Yellow", AciIndex = 2 },
+                new ColorItemModel { Name = "Green", AciIndex = 3 },
+                new ColorItemModel { Name = "Cyan", AciIndex = 4 },
+                new ColorItemModel { Name = "Blue", AciIndex = 5 },
+                new ColorItemModel { Name = "Magenta", AciIndex = 6 },
+                new ColorItemModel { Name = "White", AciIndex = 7 },
+                new ColorItemModel { Name = "Gray", AciIndex = 8 },
+                new ColorItemModel { Name = "Light Gray", AciIndex = 9 }
             };
         }
     }

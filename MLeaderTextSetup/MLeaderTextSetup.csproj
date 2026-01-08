@@ -86,6 +86,8 @@
     <Compile Include="Actions\SettingsAction.cs" />
     <Compile Include="Actions\TextStyleAction.cs" />
     <Compile Include="Commands\AppCommands.cs" />
+    <Compile Include="Converters\AciColorToBrushConverter.cs" />
+    <Compile Include="Converters\AciColorToNameConverter.cs" />
     <Compile Include="Models\ColorItemModel.cs" />
     <Compile Include="Models\MLeaderTextSettingModel.cs" />
     <Compile Include="Models\PreviewDataModel.cs" />
@@ -98,10 +100,6 @@
     <Compile Include="Views\TextSetupView.xaml.cs">
       <DependentUpon>TextSetupView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\TextSetupView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -126,6 +124,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\TextSetupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
